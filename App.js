@@ -1,21 +1,40 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { View, ScrollView } from 'react-native';
+import { Header, ImageCard, Layout } from './src/components/uikit'
+
+const url = 'https://raw.githubusercontent.com/react-native-village/react-native-init/master/stargate/stargate.json'
 
 export default class App extends React.Component {
+  state = {
+    title: 'STAR GATE',
+    data: []
+  }
+
+  componentDidMount = async () => {
+    try {
+      const response = await fetch(url)
+      const data = await response.json()
+      this.setState({ data })
+    } catch(e) {
+      throw e
+    }
+  }
+
   render() {
+    const { title, data } = this.state
+
     return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
+      <View>
+        <Header title={title} />
+        <ScrollView>
+          <Layout>
+            { data.map(item => (
+              <ImageCard data={item} key={item.id}/>
+            ))
+            }
+          </Layout>
+        </ScrollView>
       </View>
-    );
+    )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
